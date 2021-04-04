@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
+const { ObjectID } = require('bson');
 require('dotenv').config()
 
 const port =process.env.PORT || 5000;
@@ -22,6 +23,7 @@ client.connect(err => {
   console.log('Database successful');
 //   client.close();
 
+// show products in ui
   app.get('/products', (req, res) => {
     productCollection.find()
     .toArray((err, items) => {
@@ -30,6 +32,15 @@ client.connect(err => {
 
   })
 
+  // single data with id
+  app.get('/products:id',(req, res) =>{
+    productCollection.find({_id: ObjectID(req.params.id)})
+    .toArray((err, documents) =>{
+      res.send(documents[0]);
+    })
+  })
+
+  // add products for admin
   app.post('/addProduct', (req, res) =>{
     const newProduct = req.body;
     console.log('adding new product', newProduct);
