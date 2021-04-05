@@ -53,7 +53,17 @@ client.connect(err => {
     })
   })
 
+  
   // orders
+
+  app.get('/orders', (req, res) => {
+    orderCollection.find()
+    .toArray((err, documents) => {
+      res.send(documents)
+    })
+
+  })
+
   app.post('/addOrder', (req, res) =>{
     const order = req.body;
     console.log('adding new product', order);
