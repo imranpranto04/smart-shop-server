@@ -3,7 +3,8 @@ const app = express()
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
-const { ObjectID } = require('bson');
+const ObjectID = require('mongodb').ObjectID;
+// const { ObjectID } = require('bson');
 require('dotenv').config()
 
 const port =process.env.PORT || 5000;
@@ -71,6 +72,18 @@ client.connect(err => {
     .then(result => {
       console.log('inserted Count',result.insertedCount);
       res.send(result.insertedCount > 0)
+    })
+  })
+
+  app.delete('/delete/:id', (req, res) => {
+    const id = (req.params.id);
+    console.log(id);
+    console.log('delete',id);
+    productCollection.deleteOne({_id:ObjectID(id)})
+    // .then(documents => res.send(!!documents.value))
+    .then(err, documents =>{
+      res.send(documents.deleteCount > 0)
+      console.log(documents, err);
     })
   })
 
